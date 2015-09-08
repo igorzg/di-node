@@ -1,0 +1,43 @@
+{
+  "name": "di-node",
+  "main": "./core/di.js",
+  "description": "Dependency injection for node js",
+  "version": "0.1.0",
+  "dependencies": {
+    "typed-js": "0.1.x"
+  },
+  "devDependencies": {
+    "gulp": "3.9.x",
+    "gulp-istanbul": "0.10.x",
+    "gulp-jasmine": "2.0.x"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/igorzg/di-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/igorzg/di-node/issues",
+    "email": "igor.zg1987@gmail.com"
+  },
+  "homepage": "https://github.com/igorzg/di-node",
+  "author": {
+    "name": "Igor Ivanovic",
+    "email": "igor.zg1987@gmail.com"
+  },
+  "keywords": [
+    "node",
+    "di",
+    "dependency",
+    "injection"
+  ],
+  "maintainers": [
+    {
+      "name": "igorzg",
+      "email": "igor.zg1987@gmail.com"
+    }
+  ],
+  "license": "MIT"
+}
