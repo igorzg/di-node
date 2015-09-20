@@ -9,9 +9,8 @@ Module mocking for easier testing
 
 # Usage
 Dependency injection provides you ioc and great testing features.
-Module returns single instance of dependency injection
-While using di-node do not load anything via require except di-node otherwise you will not be able to mock that object
-or provide custom implementation of that object when it's needed.
+Module returns single instance of dependency injection.
+> While using di-node, do not load anything via require, except di-node otherwise you will not be able to mock that object or provide custom implementation of that object when it's needed.
 
 ### Example module.js
 ```javascript
