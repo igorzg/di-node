@@ -1,11 +1,13 @@
-DI Node 
+DI Node [![Build Status](https://travis-ci.org/igorzg/di-node.svg)](https://travis-ci.org/igorzg/di-node)
 ====
 
 # Support
-[Dependency injection](https://en.wikipedia.org/wiki/Dependency_injection) for nodejs >= v4.0.0
-Path aliases
-Dynamic module definitions
-Module mocking for easier testing
+* [Dependency injection](https://en.wikipedia.org/wiki/Dependency_injection) for nodejs >= v4.0.0
+* Path aliases
+* Dynamic module definitions
+* Module mocking for easier testing
+
+Usage of older version presentation on MNUG bounded to [MVCJS](https://www.youtube.com/watch?v=Jc4B39acWYc).
 
 # Usage
 Dependency injection provides you ioc and great testing features.
