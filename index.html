@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Di-node by igorzg</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Di-node</h1>
+      <h2 class="project-tagline">Dependency injection for node &gt;= v4.0.0</h2>
+      <a href="https://github.com/igorzg/di-node" class="btn">View on GitHub</a>
+      <a href="https://github.com/igorzg/di-node/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/igorzg/di-node/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="di-node-" class="anchor" href="#di-node-" aria-hidden="true"><span class="octicon octicon-link"></span></a>DI Node </h1>
+
+<h1>
+<a id="support" class="anchor" href="#support" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support</h1>
+
+<p><a href="https://en.wikipedia.org/wiki/Dependency_injection">Dependency injection</a> for nodejs &gt;= v4.0.0
+Path aliases
+Dynamic module definitions
+Module mocking for easier testing</p>
+
+<h1>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h1>
+
+<p>Dependency injection provides you ioc and great testing features.
+Module returns single instance of dependency injection.</p>
+
+<blockquote>
+<p>While using di-node, do not load anything via require, except di-node otherwise you will not be able to mock that object or provide custom implementation of that object when it's needed.</p>
+</blockquote>
+
+<h3>
+<a id="example-modulejs" class="anchor" href="#example-modulejs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example module.js</h3>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">let</span> di <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>di-node<span class="pl-pds">'</span></span>);
+<span class="pl-k">let</span> Type <span class="pl-k">=</span> di.<span class="pl-c1">load</span>(<span class="pl-s"><span class="pl-pds">'</span>typed-js<span class="pl-pds">'</span></span>);
+<span class="pl-k">let</span> fs <span class="pl-k">=</span> di.<span class="pl-c1">load</span>(<span class="pl-s"><span class="pl-pds">'</span>fs<span class="pl-pds">'</span></span>);
+
+<span class="pl-k">class</span> <span class="pl-en">D</span> <span class="pl-k">extends</span> <span class="pl-en">Type</span> {
+    <span class="pl-en">constructor</span>(<span class="pl-smi">name</span>) {
+        <span class="pl-v">super</span>(
+            {
+                name<span class="pl-k">:</span> Type.STRING
+            }
+        );
+        <span class="pl-v">this</span>.<span class="pl-c1">name</span> <span class="pl-k">=</span> name;
+    }
+}
+
+<span class="pl-c1">module</span>.exports <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">D</span>(<span class="pl-s"><span class="pl-pds">'</span>Igor<span class="pl-pds">'</span></span>);</pre></div>
+
+<h3>
+<a id="test-of-class-d" class="anchor" href="#test-of-class-d" aria-hidden="true"><span class="octicon octicon-link"></span></a>Test of class D</h3>
+
+<div class="highlight highlight-source-js"><pre>it(<span class="pl-s"><span class="pl-pds">'</span>mock<span class="pl-pds">'</span></span>, ()<span class="pl-k"> =&gt;</span> {
+    <span class="pl-k">class</span> <span class="pl-en">A</span> {
+        <span class="pl-en">constructor</span>(<span class="pl-smi">config</span>) {
+            expect(config).toEqual({name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>str<span class="pl-pds">'</span></span>});
+        }
+    }
+    A.STRING <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>str<span class="pl-pds">'</span></span>;
+    di.setAlias(<span class="pl-s"><span class="pl-pds">'</span>b<span class="pl-pds">'</span></span>, <span class="pl-c1">__dirname</span> <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>/b<span class="pl-pds">'</span></span>);
+    <span class="pl-k">let</span> val <span class="pl-k">=</span> di.<span class="pl-c1">load</span>(<span class="pl-s"><span class="pl-pds">'</span>@{b}/di-test<span class="pl-pds">'</span></span>);
+    expect(val <span class="pl-k">instanceof</span> Type).toBe(<span class="pl-c1">true</span>);
+    <span class="pl-k">let</span> valMock <span class="pl-k">=</span> di.mock(<span class="pl-s"><span class="pl-pds">'</span>@{b}/di-test<span class="pl-pds">'</span></span>, {
+        <span class="pl-s"><span class="pl-pds">'</span>typed-js<span class="pl-pds">'</span></span><span class="pl-k">:</span> A
+    });
+    expect(valMock <span class="pl-k">instanceof</span> A).toBe(<span class="pl-c1">true</span>);
+});</pre></div>
+
+<h1>
+<a id="di-methods" class="anchor" href="#di-methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>DI Methods</h1>
+
+<h2>
+<a id="diloadkey" class="anchor" href="#diloadkey" aria-hidden="true"><span class="octicon octicon-link"></span></a>di.load(key)</h2>
+
+<p>While using di-node do not load anything via require except di-node otherwise you will not be able to mock that object
+or provide custom implementation of that object when it's needed.</p>
+
+<h3>
+<a id="diload-valid" class="anchor" href="#diload-valid" aria-hidden="true"><span class="octicon octicon-link"></span></a>di.load Valid</h3>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-s"><span class="pl-pds">'</span>use strict<span class="pl-pds">'</span></span>;
+
+<span class="pl-k">let</span> di <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>di-node<span class="pl-pds">'</span></span>);
+<span class="pl-k">let</span> Type <span class="pl-k">=</span> di.<span class="pl-c1">load</span>(<span class="pl-s"><span class="pl-pds">'</span>typed-js<span class="pl-pds">'</span></span>);
+<span class="pl-k">let</span> fs <span class="pl-k">=</span> di.<span class="pl-c1">load</span>(<span class="pl-s"><span class="pl-pds">'</span>fs<span class="pl-pds">'</span></span>);
+
+<span class="pl-k">class</span> <span class="pl-en">D</span> <span class="pl-k">extends</span> <span class="pl-en">Type</span> {
+    <span class="pl-en">constructor</span>(<span class="pl-smi">name</span>) {
+        <span class="pl-v">super</span>(
+            {
+                name<span class="pl-k">:</span> Type.STRING
+            }
+        );
+        <span class="pl-v">this</span>.<span class="pl-c1">name</span> <span class="pl-k">=</span> name;
+    }
+}</pre></div>
+
+<h3>
+<a id="diload-invalid" class="anchor" href="#diload-invalid" aria-hidden="true"><span class="octicon octicon-link"></span></a>di.load Invalid</h3>
+
+<p>Because you will not be able to mock fs when it's needed</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-s"><span class="pl-pds">'</span>use strict<span class="pl-pds">'</span></span>;
+
+<span class="pl-k">let</span> di <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>di-node<span class="pl-pds">'</span></span>);
+<span class="pl-k">let</span> Type <span class="pl-k">=</span> di.<span class="pl-c1">load</span>(<span class="pl-s"><span class="pl-pds">'</span>typed-js<span class="pl-pds">'</span></span>);
+<span class="pl-k">let</span> fs <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>fs<span class="pl-pds">'</span></span>);
+
+<span class="pl-k">class</span> <span class="pl-en">D</span> <span class="pl-k">extends</span> <span class="pl-en">Type</span> {
+    <span class="pl-en">constructor</span>(<span class="pl-smi">name</span>) {
+        <span class="pl-v">super</span>(
+            {
+                name<span class="pl-k">:</span> Type.STRING
+            }
+        );
+        <span class="pl-v">this</span>.<span class="pl-c1">name</span> <span class="pl-k">=</span> name;
+    }
+}</pre></div>
+
+<h2>
+<a id="dimockmodule-modules" class="anchor" href="#dimockmodule-modules" aria-hidden="true"><span class="octicon octicon-link"></span></a>di.mock(module, modules)</h2>
+
+<p>Mock is used for testing purposes
+{string} module
+{Object} definition of modules</p>
+
+<div class="highlight highlight-source-js"><pre>it(<span class="pl-s"><span class="pl-pds">'</span>mock<span class="pl-pds">'</span></span>, ()<span class="pl-k"> =&gt;</span> {
+    <span class="pl-k">class</span> <span class="pl-en">A</span> {
+        <span class="pl-en">constructor</span>(<span class="pl-smi">config</span>) {
+            expect(config).toEqual({name<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>str<span class="pl-pds">'</span></span>});
+        }
+    }
+    A.STRING <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>str<span class="pl-pds">'</span></span>;
+    di.setAlias(<span class="pl-s"><span class="pl-pds">'</span>b<span class="pl-pds">'</span></span>, <span class="pl-c1">__dirname</span> <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>/b<span class="pl-pds">'</span></span>);
+    <span class="pl-k">let</span> val <span class="pl-k">=</span> di.<span class="pl-c1">load</span>(<span class="pl-s"><span class="pl-pds">'</span>@{b}/di-test<span class="pl-pds">'</span></span>);
+    expect(val <span class="pl-k">instanceof</span> Type).toBe(<span class="pl-c1">true</span>);
+    <span class="pl-k">let</span> valMock <span class="pl-k">=</span> di.mock(<span class="pl-s"><span class="pl-pds">'</span>@{b}/di-test<span class="pl-pds">'</span></span>, {
+        <span class="pl-s"><span class="pl-pds">'</span>typed-js<span class="pl-pds">'</span></span><span class="pl-k">:</span> A
+    });
+    expect(valMock <span class="pl-k">instanceof</span> A).toBe(<span class="pl-c1">true</span>);
+});</pre></div>
+
+<h2>
+<a id="disetaliaskey-value" class="anchor" href="#disetaliaskey-value" aria-hidden="true"><span class="octicon octicon-link"></span></a>di.setAlias(key, value)</h2>
+
+<p>Sets specific path alias which can be used in load method
+{string} key
+{string} value</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// set aliases</span>
+di.setAlias(<span class="pl-s"><span class="pl-pds">'</span>app<span class="pl-pds">'</span></span>, <span class="pl-c1">__dirname</span> <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>/app<span class="pl-pds">'</span></span>);
+di.setAlias(<span class="pl-s"><span class="pl-pds">'</span>components<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>@{app}/components<span class="pl-pds">'</span></span>);
+<span class="pl-c">// usage</span>
+di.<span class="pl-c1">load</span>(<span class="pl-s"><span class="pl-pds">'</span>@{app}/module<span class="pl-pds">'</span></span>);
+di.<span class="pl-c1">load</span>(<span class="pl-s"><span class="pl-pds">'</span>@{components}/redis<span class="pl-pds">'</span></span>);</pre></div>
+
+<h2>
+<a id="digetaliaskey" class="anchor" href="#digetaliaskey" aria-hidden="true"><span class="octicon octicon-link"></span></a>di.getAlias(key)</h2>
+
+<p>Get specific alias
+{string} key
+return {string}</p>
+
+<div class="highlight highlight-source-js"><pre>di.setAlias(<span class="pl-s"><span class="pl-pds">'</span>app<span class="pl-pds">'</span></span>, <span class="pl-c1">__dirname</span> <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>/app<span class="pl-pds">'</span></span>);
+di.getAlias(<span class="pl-s"><span class="pl-pds">'</span>app<span class="pl-pds">'</span></span>); <span class="pl-c">// returns __dirname/app</span></pre></div>
+
+<h2>
+<a id="dihasaliaskey" class="anchor" href="#dihasaliaskey" aria-hidden="true"><span class="octicon octicon-link"></span></a>di.hasAlias(key)</h2>
+
+<p>Check if alias is setted
+return {boolean}</p>
+
+<div class="highlight highlight-source-js"><pre>di.setAlias(<span class="pl-s"><span class="pl-pds">'</span>app<span class="pl-pds">'</span></span>, <span class="pl-c1">__dirname</span> <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>/app<span class="pl-pds">'</span></span>);
+di.hasAlias(<span class="pl-s"><span class="pl-pds">'</span>app<span class="pl-pds">'</span></span>); <span class="pl-c">// true</span></pre></div>
+
+<h2>
+<a id="dinormalizekey" class="anchor" href="#dinormalizekey" aria-hidden="true"><span class="octicon octicon-link"></span></a>di.normalize(key)</h2>
+
+<p>Normalize path
+return {string}</p>
+
+<div class="highlight highlight-source-js"><pre>di.setAlias(<span class="pl-s"><span class="pl-pds">'</span>app<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>/app<span class="pl-pds">'</span></span>);
+di.setAlias(<span class="pl-s"><span class="pl-pds">'</span>components<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>@{app}/components<span class="pl-pds">'</span></span>);
+di.normalize(<span class="pl-s"><span class="pl-pds">'</span>@{components}/path<span class="pl-pds">'</span></span>); <span class="pl-c">//  returns /app/components/path</span></pre></div>
+
+<h2>
+<a id="disetmodulekey-value" class="anchor" href="#disetmodulekey-value" aria-hidden="true"><span class="octicon octicon-link"></span></a>di.setModule(key, value)</h2>
+
+<p>Set specific module
+{string} key
+{Object|Any} value</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// My fs implementation</span>
+di.setModule(<span class="pl-s"><span class="pl-pds">'</span>fs<span class="pl-pds">'</span></span>, {
+    readFileSync<span class="pl-k">:</span> {
+
+    }
+});
+di.setModule(<span class="pl-s"><span class="pl-pds">'</span>app/info<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>@{app}/core/info<span class="pl-pds">'</span></span>);
+<span class="pl-c">// usage</span>
+di.<span class="pl-c1">load</span>(<span class="pl-s"><span class="pl-pds">'</span>fs<span class="pl-pds">'</span></span>); <span class="pl-c">// will load custom implementation</span>
+di.<span class="pl-c1">load</span>(<span class="pl-s"><span class="pl-pds">'</span>app/info<span class="pl-pds">'</span></span>); <span class="pl-c">// will load appPath/core/info.js</span></pre></div>
+
+<h2>
+<a id="digetmodulekey" class="anchor" href="#digetmodulekey" aria-hidden="true"><span class="octicon octicon-link"></span></a>di.getModule(key)</h2>
+
+<p>Get specific module
+{string} key
+return {Object|Any} value</p>
+
+<div class="highlight highlight-source-js"><pre>di.setModule(<span class="pl-s"><span class="pl-pds">'</span>fs<span class="pl-pds">'</span></span>, {
+    readFileSync<span class="pl-k">:</span> {
+
+    }
+});
+di.getModule(<span class="pl-s"><span class="pl-pds">'</span>fs<span class="pl-pds">'</span></span>); <span class="pl-c">// returns custom fs module</span></pre></div>
+
+<h3>
+<a id="dihasmodulekey" class="anchor" href="#dihasmodulekey" aria-hidden="true"><span class="octicon octicon-link"></span></a>di.hasModule(key)</h3>
+
+<p>Check if module is registered in di 
+return {boolean}</p>
+
+<div class="highlight highlight-source-js"><pre>di.setModule(<span class="pl-s"><span class="pl-pds">'</span>custom<span class="pl-pds">'</span></span>, {
+    readFileSync<span class="pl-k">:</span> {
+
+    }
+});
+di.hasModule(<span class="pl-s"><span class="pl-pds">'</span>custom<span class="pl-pds">'</span></span>); <span class="pl-c">// true</span></pre></div>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/igorzg/di-node">Di-node</a> is maintained by <a href="https://github.com/igorzg">igorzg</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-38394375-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
