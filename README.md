@@ -8,6 +8,7 @@ DI Node [![Build Status](https://travis-ci.org/igorzg/di-node.svg)](https://trav
 * Module mocking for easier testing
 
 Usage of older version presentation on MNUG bounded to [MVCJS](https://www.youtube.com/watch?v=Jc4B39acWYc).
+Example of [CMS](https://github.com/igorzg/js_cms) app on older version.
 
 # Usage
 Dependency injection provides you ioc and great testing features.
