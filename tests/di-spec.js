@@ -108,8 +108,11 @@ describe('di', () => {
     it('mock', () => {
 
         class A {
-
+            constructor(config) {
+                expect(config).toEqual({name: 'str'});
+            }
         }
+        A.STRING = 'str';
         di.setAlias('b', __dirname + '/b');
         let val = di.load('@{b}/di-test');
         expect(val instanceof Type).toBe(true);
