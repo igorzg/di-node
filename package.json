@@ -1,6 +1,6 @@
 {
   "name": "di-node",
-  "main": "./core/di.js",
+  "main": "./core/index.js",
   "description": "Dependency injection for node js",
   "version": "0.1.0",
   "dependencies": {
@@ -9,7 +9,8 @@
   "devDependencies": {
     "gulp": "3.9.x",
     "gulp-istanbul": "0.10.x",
-    "gulp-jasmine": "2.0.x"
+    "gulp-jasmine": "2.0.x",
+    "gulp-exit": "0.0.x"
   },
   "engines": {
     "node": ">=4.0.0"

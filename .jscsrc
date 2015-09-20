@@ -10,7 +10,7 @@
     ]
   },
   "validateQuoteMarks": {
-    "mark": "\"",
+    "mark": "'",
     "escape": true
   },
   "maximumLineLength": 120

@@ -1,8 +1,9 @@
-"use strict";
+'use strict';
 
-let Type = require("typed-js");
+let Type = require('typed-js');
+let path = require('path');
 /**
- * @license Mit Licence 2014
+ * @license Mit Licence 2015
  * @since 0.1.0
  * @author Igor Ivanovic
  * @name DI
@@ -12,12 +13,16 @@ let Type = require("typed-js");
  * DI is main object for handling dependency injection
  */
 class DI extends Type {
+
     constructor() {
         super({
             aliases: Type.OBJECT,
-            filePaths: Type.OBJECT
+            modules: Type.OBJECT
         });
+        this.aliases = {};
+        this.modules = {};
     }
+
     /**
      * @since 0.1.0
      * @author Igor Ivanovic
@@ -30,13 +35,14 @@ class DI extends Type {
     normalize(value) {
         if (Type.isString(value)) {
             Object.keys(this.aliases).forEach(key => {
-                value = value.replace("@{" + key + "}", this.aliases[key]);
+                value = value.replace('@{' + key + '}', this.aliases[key]);
             });
             return path.normalize(value);
         } else {
             throw new Error(`DI.normalize: ${value} is not string`);
         }
     }
+
     /**
      * @since 0.1.0
      * @author Igor Ivanovic
@@ -50,6 +56,7 @@ class DI extends Type {
     hasAlias(key) {
         return this.aliases.hasOwnProperty(key);
     }
+
     /**
      * @since 0.1.0
      * @author Igor Ivanovic
@@ -62,10 +69,11 @@ class DI extends Type {
      */
     getAlias(key) {
         if (this.hasAlias(key)) {
-            return this.normalize(this.aliases[key]);
+            return this.aliases[key];
         }
         throw new Error(`DI.getAlias: ${key} is not in registered as alias`);
     }
+
     /**
      * @since 0.1.0
      * @author Igor Ivanovic
@@ -78,24 +86,29 @@ class DI extends Type {
      * Set an path alias
      */
     setAlias(key, val) {
+        if (!Type.isString(key) || !Type.isString(val)) {
+            throw new Error(`DI.setAlias: ${key} or ${val} is not string type`);
+        }
         this.aliases[key] = val;
     }
+
     /**
      * @since 0.1.0
      * @author Igor Ivanovic
      * @function
-     * @name DI#refereshNodeModuleCache
+     * @name DI#refreshModuleCache
      * @param {String} file
      *
      * @description
      * Refreshes node module
      */
-    refereshNodeModuleCache(file) {
-        let path = this.getFilePath(file);
-        let key = require.resolve(path + ".js");
+    refreshModuleCache(file) {
+        let path = this.getModule(file);
+        let key = require.resolve(path + '.js');
         delete require.cache[key];
         return path;
     }
+
     /**
      * @since 0.1.0
      * @author Igor Ivanovic
@@ -106,9 +119,10 @@ class DI extends Type {
      * @description
      * Check if key exists in file paths
      */
-    hastFilePath(key) {
-        return this.filePaths.hasOwnProperty(key);
+    hasModule(key) {
+        return this.modules.hasOwnProperty(key);
     }
+
     /**
      * @since 0.1.0
      * @author Igor Ivanovic
@@ -120,9 +134,13 @@ class DI extends Type {
      * @description
      * Check if key exists in file paths
      */
-    setFilePath(key, value) {
-        this.filePaths[key] = value;
+    setModule(key, value) {
+        if (!Type.isString(key)) {
+            throw new Error(`DI.setModule: ${key} is not string type`);
+        }
+        this.modules[key] = value;
     }
+
     /**
      * @since 0.1.0
      * @author Igor Ivanovic
@@ -133,12 +151,16 @@ class DI extends Type {
      * @description
      * Return file path
      */
-    getFilePath(key) {
-        if (this.hastFilePath(key)) {
-            key = this.filePaths[key];
+    getModule(key) {
+        if (this.hasModule(key)) {
+            key = this.modules[key];
         }
-        return this.normalize(key);
+        if (Type.isString(key)) {
+            return this.normalize(key);
+        }
+        return key;
     }
+
     /**
      * @since 0.1.0
      * @author Igor Ivanovic
@@ -161,7 +183,7 @@ class DI extends Type {
             // load module or exec if its function
             if (Type.isString(file)) {
                 // do require
-                return require(this.refereshNodeModuleCache(file));
+                return require(this.refreshModuleCache(file));
             } else if (Type.isFunction(file)) {
                 return file();
             }
@@ -171,6 +193,7 @@ class DI extends Type {
             DI.prototype.load = load;
         }
     }
+
     /**
      * @since 0.1.0
      * @author Igor Ivanovic
@@ -183,7 +206,7 @@ class DI extends Type {
      */
     load(key) {
         try {
-            return require(this.getFilePath(key));
+            return require(this.getModule(key));
         } catch (e) {
             throw new Error(`DI.load ${e}`);
         }
@@ -191,4 +214,3 @@ class DI extends Type {
 }
 
 module.exports = new DI;
-module.exports.DI = DI;
