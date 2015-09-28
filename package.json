@@ -2,7 +2,7 @@
   "name": "di-node",
   "main": "./core/index.js",
   "description": "Dependency injection for node js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "dependencies": {
     "typed-js": "0.1.x"
   },

@@ -204,11 +204,25 @@ class DI extends Type {
      * @description
      * Return loaded module
      */
+    /**
+     * @since 0.1.0
+     * @author Igor Ivanovic
+     * @function
+     * @name DI#load
+     * @param {String} key
+     *
+     * @description
+     * Return loaded module
+     */
     load(key) {
+        let cModule = this.getModule(key);
         try {
-            return require(this.getModule(key));
+            if (Type.isString(cModule)) {
+                return require(cModule);
+            }
+            return cModule;
         } catch (e) {
-            throw new Error(`DI.load ${e}`);
+            throw new Error(`DI.load ${cModule} => ${e}`);
         }
     }
 }

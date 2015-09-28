@@ -90,7 +90,7 @@ describe('di', () => {
         } catch (e) {
             m = e;
         } finally {
-            expect(m.toString()).toBe(`Error: DI.load Error: Cannot find module '${di.normalize('@{a}/ac')}'`);
+            expect(m.toString()).toBe(`Error: DI.load ${di.normalize('@{a}/ac')} => Error: Cannot find module '${di.normalize('@{a}/ac')}'`);
         }
     });
 
