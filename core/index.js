@@ -193,17 +193,6 @@ class DI extends Type {
             DI.prototype.load = load;
         }
     }
-
-    /**
-     * @since 0.1.0
-     * @author Igor Ivanovic
-     * @function
-     * @name DI#load
-     * @param {String} key
-     *
-     * @description
-     * Return loaded module
-     */
     /**
      * @since 0.1.0
      * @author Igor Ivanovic
