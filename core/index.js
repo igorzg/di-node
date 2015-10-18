@@ -14,13 +14,18 @@ let path = require('path');
  */
 class DI extends Type {
 
-    constructor() {
-        super({
+    constructor(require, config) {
+        super(Object.assign({
             aliases: Type.OBJECT,
-            modules: Type.OBJECT
-        });
+            modules: Type.OBJECT,
+            require: Type.FUNCTION
+        }, config));
         this.aliases = {};
         this.modules = {};
+        if (!Type.isFunction(require)) {
+            throw new TypeError('"require" parameter must be function type, please provide your "require" resolver');
+        }
+        this.require = require;
     }
 
     /**
@@ -207,7 +212,7 @@ class DI extends Type {
         let cModule = this.getModule(key);
         try {
             if (Type.isString(cModule)) {
-                return require(cModule);
+                return this.require(cModule);
             }
             return cModule;
         } catch (e) {
@@ -216,4 +221,4 @@ class DI extends Type {
     }
 }
 
-module.exports = new DI;
+module.exports = DI;

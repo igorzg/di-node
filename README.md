@@ -15,9 +15,20 @@ Dependency injection provides you ioc and great testing features.
 Module returns single instance of dependency injection.
 > While using di-node, do not load anything via require, except di-node otherwise you will not be able to mock that object or provide custom implementation of that object when it's needed.
 
+# CREATE FILE ./di.js
+**VERY IMPORTANT is to pass local require resolver to correctly resolve dependencies**
+```javascript
+let DI = require('di-node');
+let di = new DI(require);
+/// do something here
+di.setAlias('mypath', __dirname + '/mypath');
+module.exports = di;
+```
+
+
 ### Example module.js
 ```javascript
-let di = require('di-node');
+let di = require('./di');
 let Type = di.load('typed-js');
 let fs = di.load('fs');
 
@@ -63,7 +74,7 @@ or provide custom implementation of that object when it's needed.
 ```javascript
 'use strict';
 
-let di = require('di-node');
+let di = require('./di');
 let Type = di.load('typed-js');
 let fs = di.load('fs');
 
@@ -84,7 +95,7 @@ Because you will not be able to mock fs when it's needed
 ```javascript
 'use strict';
 
-let di = require('di-node');
+let di = require('./di');
 let Type = di.load('typed-js');
 let fs = require('fs');
 

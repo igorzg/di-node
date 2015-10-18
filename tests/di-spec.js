@@ -3,16 +3,30 @@
 
 describe('di', () => {
     let Type = require('typed-js');
-    let di = require('../');
+    let DI = require('../');
+    let di;
+
+    beforeEach(() => {
+        di = new DI(require);
+        di.setAlias('a', __dirname + '/a');
+        di.setAlias('b', __dirname + '/b');
+    });
 
     it('constructs', () => {
+        di = new DI(require);
         expect(Type.isObject(di.aliases)).toBe(true);
         expect(Type.isObject(di.modules)).toBe(true);
+        let m;
+        try {
+            di = new DI();
+        } catch (e) {
+            m = e.message;
+        }
+        expect(m).toBe('"require" parameter must be function type, please provide your "require" resolver');
     });
 
     it('setAlias', () => {
-        di.setAlias('a', __dirname + '/a');
-        di.setAlias('b', __dirname + '/b');
+
 
         expect(di.aliases.hasOwnProperty('a')).toBe(true);
         expect(di.aliases.hasOwnProperty('b')).toBe(true);
@@ -30,8 +44,6 @@ describe('di', () => {
     });
 
     it('getAlias', () => {
-        di.setAlias('a', __dirname + '/a');
-        di.setAlias('b', __dirname + '/b');
 
         expect(di.getAlias('a')).toBe(__dirname + '/a');
         expect(di.getAlias('b')).toBe(__dirname + '/b');

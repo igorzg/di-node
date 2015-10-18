@@ -1,6 +1,7 @@
 'use strict';
 
-let di = require('../../core/index');
+let DI = require('../../');
+let di = new DI(require);
 let Type = di.load('typed-js');
 
 class D extends Type {
