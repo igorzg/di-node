@@ -50,10 +50,21 @@ Module returns single instance of dependency injection.</p>
 <p>While using di-node, do not load anything via require, except di-node otherwise you will not be able to mock that object or provide custom implementation of that object when it's needed.</p>
 </blockquote>
 
+<h1>
+<a id="create-file-dijs" class="anchor" href="#create-file-dijs" aria-hidden="true"><span class="octicon octicon-link"></span></a>CREATE FILE ./di.js</h1>
+
+<p><strong>VERY IMPORTANT is to pass local require resolver to correctly resolve dependencies</strong></p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">let</span> <span class="pl-c1">DI</span> <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>di-node<span class="pl-pds">'</span></span>);
+<span class="pl-k">let</span> di <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">DI</span>(<span class="pl-c1">require</span>);
+<span class="pl-c">/// do something here</span>
+di.setAlias(<span class="pl-s"><span class="pl-pds">'</span>mypath<span class="pl-pds">'</span></span>, <span class="pl-c1">__dirname</span> <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>/mypath<span class="pl-pds">'</span></span>);
+<span class="pl-c1">module</span>.exports <span class="pl-k">=</span> di;</pre></div>
+
 <h3>
 <a id="example-modulejs" class="anchor" href="#example-modulejs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example module.js</h3>
 
-<div class="highlight highlight-source-js"><pre><span class="pl-k">let</span> di <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>di-node<span class="pl-pds">'</span></span>);
+<div class="highlight highlight-source-js"><pre><span class="pl-k">let</span> di <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>./di<span class="pl-pds">'</span></span>);
 <span class="pl-k">let</span> Type <span class="pl-k">=</span> di.<span class="pl-c1">load</span>(<span class="pl-s"><span class="pl-pds">'</span>typed-js<span class="pl-pds">'</span></span>);
 <span class="pl-k">let</span> fs <span class="pl-k">=</span> di.<span class="pl-c1">load</span>(<span class="pl-s"><span class="pl-pds">'</span>fs<span class="pl-pds">'</span></span>);
 
@@ -103,7 +114,7 @@ or provide custom implementation of that object when it's needed.</p>
 
 <div class="highlight highlight-source-js"><pre><span class="pl-s"><span class="pl-pds">'</span>use strict<span class="pl-pds">'</span></span>;
 
-<span class="pl-k">let</span> di <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>di-node<span class="pl-pds">'</span></span>);
+<span class="pl-k">let</span> di <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>./di<span class="pl-pds">'</span></span>);
 <span class="pl-k">let</span> Type <span class="pl-k">=</span> di.<span class="pl-c1">load</span>(<span class="pl-s"><span class="pl-pds">'</span>typed-js<span class="pl-pds">'</span></span>);
 <span class="pl-k">let</span> fs <span class="pl-k">=</span> di.<span class="pl-c1">load</span>(<span class="pl-s"><span class="pl-pds">'</span>fs<span class="pl-pds">'</span></span>);
 
@@ -125,7 +136,7 @@ or provide custom implementation of that object when it's needed.</p>
 
 <div class="highlight highlight-source-js"><pre><span class="pl-s"><span class="pl-pds">'</span>use strict<span class="pl-pds">'</span></span>;
 
-<span class="pl-k">let</span> di <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>di-node<span class="pl-pds">'</span></span>);
+<span class="pl-k">let</span> di <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>./di<span class="pl-pds">'</span></span>);
 <span class="pl-k">let</span> Type <span class="pl-k">=</span> di.<span class="pl-c1">load</span>(<span class="pl-s"><span class="pl-pds">'</span>typed-js<span class="pl-pds">'</span></span>);
 <span class="pl-k">let</span> fs <span class="pl-k">=</span> <span class="pl-c1">require</span>(<span class="pl-s"><span class="pl-pds">'</span>fs<span class="pl-pds">'</span></span>);
 
