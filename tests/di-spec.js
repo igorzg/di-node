@@ -60,10 +60,11 @@ describe('di', () => {
     it('normalize', () => {
         di.setAlias('a', __dirname + '/a');
         di.setAlias('b', __dirname + '/b');
+        di.setAlias('c', '@{b}/c');
 
         expect(di.normalize('@{a}/b')).toBe(__dirname + '/a/b');
         expect(di.normalize('@{b}/b')).toBe(__dirname + '/b/b');
-
+        expect(di.normalize('@{c}/n')).toBe(__dirname + '/b/c/n');
         let m;
         try {
             di.normalize(1);
@@ -71,6 +72,15 @@ describe('di', () => {
             m = e;
         } finally {
             expect(m.toString()).toBe('Error: DI.normalize: 1 is not string');
+        }
+
+        try {
+            di.normalize('@{d}/n');
+        } catch (e) {
+            m = e;
+        } finally {
+            expect(m.toString()).toBe(`Error: DI.normalize: @{d}/n , alias d is not defined in
+                    {"a":"/Volumes/External/Github/di-node/tests/a","b":"/Volumes/External/Github/di-node/tests/b","c":"@{b}/c"} at index 0`);
         }
     });
 

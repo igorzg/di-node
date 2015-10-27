@@ -2,6 +2,7 @@
 
 let Type = require('typed-js');
 let path = require('path');
+let aliases = /@\{([^}])\}/g;
 /**
  * @license Mit Licence 2015
  * @since 0.1.0
@@ -39,9 +40,17 @@ class DI extends Type {
      */
     normalize(value) {
         if (Type.isString(value)) {
-            Object.keys(this.aliases).forEach(key => {
-                value = value.replace('@{' + key + '}', this.aliases[key]);
+            value = value.replace(aliases, (re, key, index) => {
+                if (!this.aliases.hasOwnProperty(key)) {
+                    throw new Error(`DI.normalize: ${value} , alias ${key} is not defined in
+                    ${JSON.stringify(this.aliases)} at index ${index}`);
+                }
+                return this.aliases[key];
             });
+
+            if (aliases.test(value)) {
+                return this.normalize(value);
+            }
             return path.normalize(value);
         } else {
             throw new Error(`DI.normalize: ${value} is not string`);
@@ -198,6 +207,7 @@ class DI extends Type {
             DI.prototype.load = load;
         }
     }
+
     /**
      * @since 0.1.0
      * @author Igor Ivanovic
