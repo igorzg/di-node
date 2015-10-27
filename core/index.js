@@ -2,7 +2,7 @@
 
 let Type = require('typed-js');
 let path = require('path');
-let aliases = /@\{([^}])\}/g;
+let aliases = /@\{([^}]+)\}/g;
 /**
  * @license Mit Licence 2015
  * @since 0.1.0
